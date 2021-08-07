@@ -1,6 +1,7 @@
 from turtle import *
 import turtle
 import random
+import csv
 
 points_x, points_y = [],[]
 
@@ -29,31 +30,35 @@ def gen_system(xpos, ypos, count):
         points_y.append(s.ycor())
 
 # Generates Galaxy Lines
-def gen_galaxy_line(turt, start, stop, systems, multiplier):
-    if start > stop:
+
+# Recursive method that continues to draw lines based on the value of "start"
+# Generates solar systems at the end of each line
+def gen_galaxy_line(turt, start, stop, systems, multiplier=1):
+    if start > stop: # Condition to stop recusive function
         gen_galaxy_line(turt, start - 1, stop, systems, multiplier)
-        turt.forward((random.randrange(1, 9)/10+start)*multiplier)
-        turt.right(random.randrange(3, 9))
-        gen_system(int(turt.xcor()), int(turt.ycor()), systems)
+        turt.forward((random.randrange(1, 9)/10+start)*multiplier) # Moves turtle forward a random yet increasing distance
+        turt.right(random.randrange(3, 9)) #
+        gen_system(int(turt.xcor()), int(turt.ycor()), systems)  # Generates solar systems
         
         return turt
 
+# the shit
 for angle in range(0, 360, 60):
     a = turtle.Turtle()
-    a.right(angle)
-    first_section_length = random.randrange(30, 60)
+    a.right(angle) # turns turtle based on angle to set the initial angle
+    first_section_length = random.randrange(30, 60) # varies the distance of the first segment of the spiral (before the split)
 
-    a = gen_galaxy_line(a, first_section_length, 0, random.randrange(20, 40), 1)
+    a = gen_galaxy_line(a, first_section_length, 0, random.randrange(20, 40), 1) 
     b = a.clone()
     b.right(10)
 
-    gen_galaxy_line(a, 100, first_section_length, random.randrange(20, 80), 2)
+    # Continues two new lines from the previous section to create a 'split' effect
+    gen_galaxy_line(a, 100, first_section_length, random.randrange(20, 80), 2) # Uses 2x multiplier to make the split sections of the spiral have a wider radius
     gen_galaxy_line(b, 100, first_section_length, random.randrange(20, 80), 2)
     
 print("Total Systems: ", len(points_x))
 res = [points_x, points_y]
 
-import csv
 with open("points.csv","w+") as my_csv:
     csvWriter = csv.writer(my_csv,delimiter=',')
     csvWriter.writerows(res)
