@@ -1,9 +1,10 @@
-from tkinter import *
 from turtle import *
 import turtle
 import random
 
 tot = 0
+points_x = []
+points_y = []
 
 angles = []
 i = 0
@@ -15,6 +16,7 @@ ts = turtle.getscreen()
 turtle.screensize(canvwidth=5000, canvheight=5000,
                   bg="white")
 
+ts.tracer(False)
 systurtle = turtle.Turtle()
 systurtle.pencolor("red")
 def gen_system(xpos, ypos, times):
@@ -28,6 +30,8 @@ def gen_system(xpos, ypos, times):
             systurtle.pencolor("red")
             systurtle.forward(random.randrange(10, 100))
         print(systurtle.xcor(), systurtle.ycor())
+        points_x.append(systurtle.xcor())
+        points_y.append(systurtle.ycor())
         systurtle.pendown()
         systurtle.right(random.randrange(0, 360))
         systurtle.circle(1)
@@ -77,8 +81,16 @@ for x in angles:
                 c.right(tempang)
                 gen_system(int(c.xcor()), int(c.ycor()), 80)
                 tot+=80
+print(tot)
+res = [points_x, points_y]
 
-ts.getcanvas().postscript(file="duck.eps")
+import csv
+
+with open("points.csv","w+") as my_csv:
+    csvWriter = csv.writer(my_csv,delimiter=',')
+    csvWriter.writerows(res)
+
 turtle.done()
 
-print(tot)
+
+
