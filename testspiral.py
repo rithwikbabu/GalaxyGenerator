@@ -8,7 +8,7 @@ points_x, points_y = [],[]
 # Screen Config
 ts = turtle.getscreen()
 turtle.screensize(canvwidth=5000, canvheight=5000,
-                  bg="white")
+                  bg="black")
 ts.tracer(False) #removing turtle animations
 
 # Generates Solar Systems
@@ -25,9 +25,9 @@ def gen_system(xpos, ypos, count):
             s.pencolor("red")
             s.forward(random.randrange(10, 100)) #random distance
         s.pendown()
-        s.circle(1) #spawn system
-        points_x.append(s.xcor())
-        points_y.append(s.ycor())
+        s.forward(1) #spawn system
+        points_x.append(int(s.xcor()))
+        points_y.append(int(s.ycor()))
 
 # Generates Galaxy Lines
 
@@ -46,15 +46,19 @@ def gen_galaxy_line(turt, start, stop, systems, multiplier=1):
 for angle in range(0, 360, 60):
     a = turtle.Turtle()
     a.right(angle) # turns turtle based on angle to set the initial angle
-    first_section_length = random.randrange(30, 60) # varies the distance of the first segment of the spiral (before the split)
+    first_section_length = random.randrange(25, 50) # varies the distance of the first segment of the spiral (before the split)
 
-    a = gen_galaxy_line(a, first_section_length, 0, random.randrange(20, 40), 1) 
+    a = gen_galaxy_line(a, first_section_length, 0, random.randrange(20, 30), 1) 
     b = a.clone()
     b.right(10)
 
     # Continues two new lines from the previous section to create a 'split' effect
-    gen_galaxy_line(a, 100, first_section_length, random.randrange(20, 80), 2) # Uses 2x multiplier to make the split sections of the spiral have a wider radius
-    gen_galaxy_line(b, 100, first_section_length, random.randrange(20, 80), 2)
+    a = gen_galaxy_line(a, 75, first_section_length, random.randrange(20, 40), 2) # Uses 2x multiplier to make the split sections of the spiral have a wider radius
+    b = gen_galaxy_line(b, 75, first_section_length, random.randrange(20, 40), 2)
+    a.pencolor("white")
+    b.pencolor("white")
+    a.circle(10)
+    b.circle(10)
     
 print("Total Systems: ", len(points_x))
 res = [points_x, points_y]
